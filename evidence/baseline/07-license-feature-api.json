@@ -1,0 +1,8 @@
+{
+  "enterprise": {
+    "saml": false,
+    "ldap": false,
+    "oidc": false
+  },
+  "license": null
+}

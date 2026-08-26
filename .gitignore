@@ -1,0 +1,13 @@
+.env
+.env.*
+!.env.example
+
+evidence/**/*.log
+evidence/**/*.txt
+*.db
+*.sqlite
+*.sqlite3
+
+node_modules/
+.DS_Store
+*.tmp

@@ -1,0 +1,207 @@
+[
+  {
+    "updatedAt": "2026-08-26T16:20:15.097Z",
+    "createdAt": "2026-08-26T16:15:17.810Z",
+    "id": "ZXLoOGKZCi4yNk5I",
+    "name": "Baseline-Webhook Test",
+    "description": null,
+    "active": false,
+    "isArchived": false,
+    "nodes": [
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "staging-webhook-test",
+          "responseMode": "lastNode",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2.1,
+        "position": [
+          0,
+          0
+        ],
+        "id": "b2167051-21fc-474f-8d4b-493e741ff6cc",
+        "name": "Webhook",
+        "webhookId": "0ad9d362-a5eb-460b-aa01-05a8bdbdee45"
+      },
+      {
+        "parameters": {
+          "jsCode": "const payload = $json.body ?? {};\n\nreturn [\n  {\n    json: {\n      received_message: payload.message ?? null,\n      uppercase_message: String(payload.message ?? '').toUpperCase(),\n      validation_result: payload.message ? 'PASS' : 'FAIL'\n    }\n  }\n];"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          224,
+          0
+        ],
+        "id": "b0b465c1-ad6a-490e-b60c-4160f28f326d",
+        "name": "Code in JavaScript"
+      }
+    ],
+    "connections": {
+      "Webhook": {
+        "main": [
+          [
+            {
+              "node": "Code in JavaScript",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "settings": {
+      "executionOrder": "v1",
+      "binaryMode": "separate",
+      "availableInMCP": false
+    },
+    "staticData": null,
+    "meta": null,
+    "nodeGroups": [],
+    "pinData": {},
+    "versionId": "65c07128-885b-4057-aecb-5a3a16a83c5a",
+    "activeVersionId": null,
+    "versionCounter": 9,
+    "triggerCount": 0,
+    "sourceWorkflowId": null,
+    "tags": [],
+    "shared": [
+      {
+        "updatedAt": "2026-08-26T16:15:17.810Z",
+        "createdAt": "2026-08-26T16:15:17.810Z",
+        "role": "workflow:owner",
+        "workflowId": "ZXLoOGKZCi4yNk5I",
+        "projectId": "rZOTPTkkWdJU5Z7Z",
+        "project": {
+          "updatedAt": "2026-08-26T15:39:57.758Z",
+          "createdAt": "2026-08-26T15:18:01.558Z",
+          "id": "rZOTPTkkWdJU5Z7Z",
+          "name": "Staging Admin <stagingadmin@eg.test>",
+          "type": "personal",
+          "icon": null,
+          "description": null,
+          "customTelemetryTags": [],
+          "creatorId": "b230dddc-5070-45f1-b2b3-ae0d80c3373d"
+        }
+      }
+    ],
+    "versionMetadata": {
+      "name": null,
+      "description": null
+    }
+  },
+  {
+    "updatedAt": "2026-08-26T16:08:36.732Z",
+    "createdAt": "2026-08-26T16:00:53.644Z",
+    "id": "6nmo0vi2f5SjZ6a2",
+    "name": "Baseline - Core Functional Test",
+    "description": null,
+    "active": false,
+    "isArchived": false,
+    "nodes": [
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.manualTrigger",
+        "typeVersion": 1,
+        "position": [
+          0,
+          0
+        ],
+        "id": "a2dea710-53ca-4736-b11b-5b40db94b822",
+        "name": "When clicking ‘Execute workflow’"
+      },
+      {
+        "parameters": {
+          "url": "http://n8n:5678/healthz",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.5,
+        "position": [
+          224,
+          0
+        ],
+        "id": "e2299755-ac55-4bff-be7e-2f401a385b11",
+        "name": "HTTP Request"
+      },
+      {
+        "parameters": {
+          "jsCode": "const items = $input.all();\n\nreturn items.map((item) => ({\n  json: {\n    service_status: item.json.status,\n    input_value: 21,\n    doubled_value: 21 * 2,\n    validation_result: item.json.status === 'ok' ? 'PASS' : 'FAIL'\n  }\n}));"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          448,
+          0
+        ],
+        "id": "d962c314-ecb7-4065-bed0-91685f5deeda",
+        "name": "Code in JavaScript"
+      }
+    ],
+    "connections": {
+      "When clicking ‘Execute workflow’": {
+        "main": [
+          [
+            {
+              "node": "HTTP Request",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "HTTP Request": {
+        "main": [
+          [
+            {
+              "node": "Code in JavaScript",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "settings": {
+      "executionOrder": "v1",
+      "binaryMode": "separate",
+      "availableInMCP": false
+    },
+    "staticData": null,
+    "meta": null,
+    "nodeGroups": [],
+    "pinData": {},
+    "versionId": "1f77b8ff-c359-4422-b751-21848cd7df9c",
+    "activeVersionId": null,
+    "versionCounter": 6,
+    "triggerCount": 0,
+    "sourceWorkflowId": null,
+    "tags": [],
+    "shared": [
+      {
+        "updatedAt": "2026-08-26T16:00:53.644Z",
+        "createdAt": "2026-08-26T16:00:53.644Z",
+        "role": "workflow:owner",
+        "workflowId": "6nmo0vi2f5SjZ6a2",
+        "projectId": "rZOTPTkkWdJU5Z7Z",
+        "project": {
+          "updatedAt": "2026-08-26T15:39:57.758Z",
+          "createdAt": "2026-08-26T15:18:01.558Z",
+          "id": "rZOTPTkkWdJU5Z7Z",
+          "name": "Staging Admin <stagingadmin@eg.test>",
+          "type": "personal",
+          "icon": null,
+          "description": null,
+          "customTelemetryTags": [],
+          "creatorId": "b230dddc-5070-45f1-b2b3-ae0d80c3373d"
+        }
+      }
+    ],
+    "versionMetadata": {
+      "name": null,
+      "description": null
+    }
+  }
+]
