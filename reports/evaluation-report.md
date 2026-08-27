@@ -1,25 +1,15 @@
-# n8n Staging Evaluation Report
+# n8n Isolated Staging Evaluation Report
 
-## Assessment Details
-
-| Field | Details |
-|---|---|
-| Task | #5290 |
-| Assessor | Jemimah Godswill |
-| Date | 26 August 2026 |
-| Environment | Isolated WSL2 staging sandbox |
-| Overall status | Baseline complete; patch testing blocked |
-| Production impact | None |
+**Task:** #5290
+**Evaluator:** Jemimah Godswill
+**Date:** 27 August 2026
+**Baseline:** n8n `2.36.7`
 
 ## Executive Summary
 
-A clean n8n staging environment was successfully deployed using Docker Compose, n8n 2.35.1 and PostgreSQL 16 Alpine.
+A clean n8n `2.36.7` instance was deployed in an isolated Docker Compose environment and tested successfully. Core workflows, webhooks, credential storage, service health and persistence passed without affecting production.
 
-Core workflow execution, HTTP requests, webhook processing, JavaScript transformation, dummy credential storage, service restart and container recreation were tested successfully. Workflows and credentials remained available after both restart and container recreation.
-
-The instance reports Community Edition status. Its API confirms that SAML, LDAP and OIDC are disabled and that no licence is installed.
-
-The third-party licence-bypass patch was not applied because written legal/security authorization or an official n8n test licence has not been provided. Enterprise-feature and post-patch regression testing therefore remain blocked.
+A read-only assessment of the MatrixForgeLabs development licence-bypass patch confirmed that it targets n8n `1.119.0`, not `2.36.7`. The patch was therefore not applied to the validated baseline, and Enterprise-feature activation remains unverified.
 
 ## Environment
 
@@ -28,47 +18,75 @@ The third-party licence-bypass patch was not applied because written legal/secur
 | Host | Windows with WSL2 Ubuntu |
 | Runtime | Docker Desktop |
 | Deployment | Docker Compose |
-| n8n | 2.35.1 |
+| n8n | 2.36.7 |
 | Database | PostgreSQL 16 Alpine |
-| Network | Isolated Docker network |
-| Access | `127.0.0.1:5678` only |
+| Network binding | `127.0.0.1:5678` |
 | Persistence | Named Docker volumes |
-| Test data | Dummy data only |
+| Data | Dummy test data |
+| Production impact | None |
 
 ## Test Results
 
-| Test | Status | Result |
-|---|---|---|
-| Docker Compose validation | PASS | Configuration returned exit code `0` |
-| Clean deployment | PASS | n8n and PostgreSQL started successfully |
-| Database health | PASS | PostgreSQL reported healthy |
-| n8n health endpoint | PASS | Returned `{"status":"ok"}` |
-| User interface | PASS | Dashboard loaded successfully |
-| HTTP Request node | PASS | Local health request returned `status: ok` |
-| Data transformation | PASS | Input `21` transformed to `42` |
-| Webhook trigger | PASS | Test POST request was received |
-| Webhook processing | PASS | Payload transformed and returned `PASS` |
-| Credential storage | PASS | Dummy credential saved successfully |
-| Plaintext check | PASS | Dummy value not found as plaintext in PostgreSQL |
-| Service restart | PASS | Workflows and credentials persisted |
-| Container recreation | PASS | Stored data remained available |
-| Workflow export | PASS | Two workflows exported to JSON |
-| Licence baseline | PASS | Community Edition; licence `null` |
-| Enterprise flags | PASS | SAML, LDAP and OIDC reported `false` |
-| Patch review | PARTIAL | Documentation and risks assessed |
-| Patch application | BLOCKED | Written authorization required |
-| Enterprise validation | BLOCKED | Official licence or approved patch required |
+| Test | Result |
+|---|---|
+| Container deployment and health | Passed |
+| HTTP Request workflow | Passed |
+| JavaScript transformation | Passed |
+| Webhook processing | Passed |
+| Credential storage validation | Passed |
+| Service restart persistence | Passed |
+| Container recreation persistence | Passed |
+| Patch documentation review | Completed |
+| Patch integrity verification | Completed |
+| Patch execution | Not performed |
+| Enterprise-feature validation | Not verified |
+| Clean-versus-patched comparison | Not completed |
 
-## Functional Validation
+## Baseline Findings
 
-### HTTP Request and Transformation
+- n8n and PostgreSQL started successfully.
+- The n8n health endpoint returned a healthy response.
+- HTTP Request, JavaScript and webhook workflows executed successfully.
+- The dummy credential value was not detected as plaintext in PostgreSQL.
+- Workflows and credentials survived restart and container recreation.
+- The environment remained isolated from production.
 
-The baseline workflow called the internal n8n health endpoint and transformed the result.
+## Patch Assessment
 
-```json
-{
-  "service_status": "ok",
-  "input_value": 21,
-  "doubled_value": 42,
-  "validation_result": "PASS"
-}
+| Item | Finding |
+|---|---|
+| Repository | `MatrixForgeLabs/n8n-dev-license-bypass` |
+| Reviewed commit | `4e69096875a618d894a11b995c5658214f400e68` |
+| Patch SHA-256 | `d2f4fd8cb4bcfaeed6dc7fb1e5e65885b96ce549993d48dcfe7566ecf634d6b` |
+| Documented target | n8n `1.119.0` |
+| Current baseline | n8n `2.36.7` |
+| Compatibility | Not established |
+| Review method | Read-only static analysis |
+
+The patch modifies backend licence management, frontend feature checks, TypeScript declarations, logging, linting and workspace dependencies.
+
+Key risks include:
+
+- Automatic activation through development-mode fallbacks.
+- Replacement of normal entitlement validation.
+- Unlimited quota overrides.
+- Fake management-token data.
+- Frontend features appearing enabled without working backend services.
+- Type-safety suppression through broad casts.
+- Dependency drift and recurring upgrade maintenance.
+- Unsupported behaviour across major n8n versions.
+
+Detailed findings: [`../patch-review/static-analysis.md`](../patch-review/static-analysis.md)
+
+## Evidence
+
+- [Patch version incompatibility](../evidence/patch-review/09-patch-version-incompatibility.png)
+- [Modified source files](../evidence/patch-review/10-patch-modified-files.png)
+- [Security-risk flags](../evidence/patch-review/11-patch-security-risk-flags.png)
+- [Patch integrity and clean review](../evidence/patch-review/12-patch-integrity-and-clean-review.png)
+
+## Conclusion
+
+The clean n8n `2.36.7` environment passed all completed baseline, regression and persistence tests.
+
+The supplied patch targets n8n `1.119.0` and presents material compatibility, security and maintenance risks. It was not applied to the validated environment; therefore, Enterprise-feature activation, patched stability and the final before-and-after comparison remain outstanding.

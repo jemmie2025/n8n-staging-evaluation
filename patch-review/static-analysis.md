@@ -1,46 +1,64 @@
-# Static Patch Risk Assessment
+# MatrixForgeLabs Patch — Static Assessment
 
-## Review Status
+## Scope
 
-The supplied documentation was reviewed without applying or executing the patch. Execution remains blocked pending written legal/security authorization or an official n8n test licence.
+This assessment reviews the supplied MatrixForgeLabs n8n development licence-bypass repository without executing its scripts or modifying the validated n8n environment.
 
-## Documented Changes
+| Item | Value |
+|---|---|
+| Repository | `MatrixForgeLabs/n8n-dev-license-bypass` |
+| Reviewed commit | `4e69096875a618d894a11b995c5658214f400e68` |
+| Patch SHA-256 | `d2f4fd8cb4bcfaeed6dc7fb1e5e65885b96ce549993d48dcfe7566ecf634d6b` |
+| Documented target | n8n `1.119.0` |
+| Evaluation baseline | n8n `2.36.7` |
+| Review method | Read-only static analysis |
 
-The patch reportedly:
+## Compatibility Finding
 
-- Replaces backend licence-manager behaviour.
-- Forces frontend enterprise feature flags.
-- Uses environment variables to enable the bypass.
-- Requires a custom n8n source build.
-- May conflict with later n8n releases.
+The patch documentation identifies n8n `1.119.0` as the compatible version and requires Node.js `20.x–24.x` with pnpm `10.x`.
 
-## Risk Summary
+The validated environment uses n8n `2.36.7`. This major-version difference means the patch cannot be considered compatible without redevelopment and full regression testing. Patch conflicts and build failures are therefore an expected risk.
 
-| Risk | Severity | Impact |
-|---|---|---|
-| Licensing and compliance | Critical | May bypass paid licence controls |
-| Non-staging activation | Critical | Bypass variables could reach unintended environments |
-| Supply-chain exposure | High | Third-party scripts modify trusted application code |
-| Feature inconsistency | High | UI flags may not represent functional backend capability |
-| Credential security | High | Modified enterprise paths require dedicated validation |
-| Upgrade compatibility | High | Changes may conflict with upstream releases |
-| Maintenance overhead | High | Custom builds require repeated review and regression testing |
-| Vendor support | High | Modified builds may fall outside supported configurations |
+![Patch version incompatibility](../evidence/patch-review/09-patch-version-incompatibility.png)
 
-## Dependencies
+## Modified Components
 
-The supplied documentation identifies:
+The patch changes seven areas:
 
-- Node.js 20–24
-- pnpm 10
-- Git
-- At least 8 GB RAM
-- Increased Node.js heap allocation for some builds
+- Backend logging
+- ESLint configuration
+- Core licence management
+- Enterprise UI rendering
+- Frontend feature settings
+- TypeScript environment declarations
+- pnpm workspace dependencies
 
-## Assessment
+![Patch-modified files](../evidence/patch-review/10-patch-modified-files.png)
 
-Feature visibility alone would not establish operational viability. Each approved modified build would require security review, dependency scanning and complete workflow, credential, webhook and persistence regression testing.
+## Key Risks
 
-## Recommendation
+| Risk | Impact |
+|---|---|
+| Development-mode fallback | The bypass may activate without the explicit bypass variable |
+| Fake licence manager | Normal entitlement validation is replaced |
+| Unlimited quotas | Product limits are overridden |
+| Fake management JWT | Components expecting valid licence data may fail |
+| Frontend proxy | Features may appear enabled without working backend services |
+| Broad `any` casts | Type incompatibilities may be hidden until runtime |
+| Dependency changes | Build reproducibility and supply-chain exposure increase |
+| Version mismatch | Upgrades may cause conflicts or silent failures |
+| Unsupported custom build | Vendor support and maintainability are reduced |
 
-Use an official n8n Enterprise trial or development licence. Do not execute the third-party patch until written authorization and compliance approval are formally recorded.
+![Patch security-risk flags](../evidence/patch-review/11-patch-security-risk-flags.png)
+
+## Integrity Verification
+
+The reviewed patch was identified by SHA-256, and `git status --short` returned no output. This confirms the cloned source remained unchanged during the assessment.
+
+![Patch integrity and clean review](../evidence/patch-review/12-patch-integrity-and-clean-review.png)
+
+## Conclusion
+
+The clean n8n `2.36.7` baseline remains stable and unchanged. The supplied patch targets n8n `1.119.0` and introduces significant compatibility, security and maintenance risks.
+
+The patch was not applied to the validated environment; therefore, Enterprise-feature activation and post-patch stability remain unverified.
