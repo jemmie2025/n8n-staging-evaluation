@@ -8,67 +8,6 @@ The clean n8n `2.36.7` environment passed all completed functional, credential-s
 
 Static analysis confirmed that the supplied patch targets n8n `1.119.0`. Compatibility with n8n `2.36.7` is not established, so the patch was not applied to the validated baseline.
 
-## Assessment Status
-
-| Area | Result |
-|---|---|
-| Isolated Docker deployment | Passed |
-| n8n 2.36.7 upgrade | Passed |
-| Core workflow execution | Passed |
-| HTTP Request and JavaScript nodes | Passed |
-| Webhook processing | Passed |
-| Credential storage validation | Passed |
-| Restart and recreation persistence | Passed |
-| Patch compatibility assessment | Completed |
-| Patch integrity verification | Completed |
-| Patch execution | Not performed |
-| Enterprise-feature validation | Not verified |
-| Before-and-after comparison | Outstanding |
-
-## Environment
-
-| Component | Configuration |
-|---|---|
-| Host | Windows with WSL2 Ubuntu |
-| Runtime | Docker Desktop |
-| Deployment | Docker Compose |
-| n8n | 2.36.7 |
-| Database | PostgreSQL 16 Alpine |
-| Network binding | `127.0.0.1:5678` |
-| Persistence | Named Docker volumes |
-| Test data | Dummy data only |
-| Production impact | None |
-
-Docker Compose was selected because the task permits Docker or Nomad and it provides sufficient isolation for this evaluation.
-
-## Baseline Validation
-
-### Isolated Deployment
-
-![Isolated n8n containers](evidence/baseline/01-baseline-containers-running.png)
-
-### Community Edition Baseline
-
-![n8n Community Edition](evidence/baseline/03-community-edition.png)
-
-### Core Workflow
-
-The HTTP Request and JavaScript transformation workflow completed successfully.
-
-![Core workflow tests passed](evidence/workflows/04-core-workflow-tests-passed.png)
-
-### Webhook Processing
-
-The webhook received and processed the test payload successfully.
-
-![Webhook processing passed](evidence/workflows/05-webhook-processing-passed.png)
-
-### Upgrade and Persistence
-
-The environment was upgraded to n8n `2.36.7`. Health, service-restart and container-recreation persistence checks passed.
-
-![n8n 2.36.7 upgrade and persistence validation](evidence/persistence/08-v2.36.7-upgrade-and-persistence-passed.png)
-
 ## Patch Assessment
 
 The MatrixForgeLabs repository was reviewed without executing its scripts or modifying the clean environment.
@@ -121,6 +60,67 @@ The patch changes seven areas across the backend, frontend and build configurati
 The patch was fingerprinted using SHA-256. `git status --short` returned no output, confirming that the cloned review source remained unchanged.
 
 ![Patch integrity and clean review](evidence/patch-review/12-patch-integrity-and-clean-review.png)
+
+## Assessment Status
+
+| Area | Result |
+|---|---|
+| Patch compatibility assessment | Completed |
+| Patch integrity verification | Completed |
+| Isolated Docker deployment | Passed |
+| n8n 2.36.7 upgrade | Passed |
+| Core workflow execution | Passed |
+| HTTP Request and JavaScript nodes | Passed |
+| Webhook processing | Passed |
+| Credential storage validation | Passed |
+| Restart and recreation persistence | Passed |
+| Patch execution | Not performed |
+| Enterprise-feature validation | Not verified |
+| Before-and-after comparison | Outstanding |
+
+## Environment
+
+| Component | Configuration |
+|---|---|
+| Host | Windows with WSL2 Ubuntu |
+| Runtime | Docker Desktop |
+| Deployment | Docker Compose |
+| n8n | 2.36.7 |
+| Database | PostgreSQL 16 Alpine |
+| Network binding | `127.0.0.1:5678` |
+| Persistence | Named Docker volumes |
+| Test data | Dummy data only |
+| Production impact | None |
+
+Docker Compose was selected because the task permits Docker or Nomad and provides sufficient isolation for this evaluation.
+
+## Baseline Validation
+
+### Isolated Deployment
+
+![Isolated n8n containers](evidence/baseline/01-baseline-containers-running.png)
+
+### Community Edition Baseline
+
+![n8n Community Edition](evidence/baseline/03-community-edition.png)
+
+### Core Workflow
+
+The HTTP Request and JavaScript transformation workflow completed successfully.
+
+![Core workflow tests passed](evidence/workflows/04-core-workflow-tests-passed.png)
+
+### Webhook Processing
+
+The webhook received and processed the test payload successfully.
+
+![Webhook processing passed](evidence/workflows/05-webhook-processing-passed.png)
+
+### Upgrade and Persistence
+
+The environment was upgraded to n8n `2.36.7`. Health, service-restart and container-recreation persistence checks passed.
+
+![n8n 2.36.7 upgrade and persistence validation](evidence/persistence/08-v2.36.7-upgrade-and-persistence-passed.png)
 
 ## Deliverables
 
