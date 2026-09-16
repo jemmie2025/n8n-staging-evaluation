@@ -77,6 +77,7 @@ The patch was fingerprinted using SHA-256. `git status --short` returned no outp
 | Patch execution | Not performed |
 | Enterprise-feature validation | Not verified |
 | Before-and-after comparison | Outstanding |
+| Separate n8n 2.38.7 validation stack | Prepared; execution pending |
 
 ## Environment
 
@@ -93,6 +94,20 @@ The patch was fingerprinted using SHA-256. `git status --short` returned no outp
 | Production impact | None |
 
 Docker Compose was selected because the task permits Docker or Nomad and provides sufficient isolation for this evaluation.
+
+## Latest-Version Follow-up
+
+`compose.latest.yaml` provides a second, non-destructive n8n `2.38.7` baseline for the manager-approved compatibility follow-up. It does not replace or alter the validated `2.36.7` environment.
+
+The follow-up stack uses:
+
+- port `127.0.0.1:5679`;
+- separate container names;
+- separate PostgreSQL and n8n volumes;
+- a separate Docker network; and
+- dummy data only.
+
+No licence-bypass settings or patch files are included. Enterprise testing still requires an authorised licence or an authorised test artifact supplied by the company.
 
 ## Baseline Validation
 
@@ -125,8 +140,11 @@ The environment was upgraded to n8n `2.36.7`. Health, service-restart and contai
 ## Deliverables
 
 - `compose.yaml` — isolated Docker deployment
+- `compose.latest.yaml` — separate latest-version validation deployment
 - `tests/health-check.sh` — automated health validation
 - `tests/persistence-check.sh` — restart and recreation validation
+- `tests/version-check.sh` — exact n8n version validation
+- `tests/latest-check.sh` — latest-stack health and version validation
 - `workflows/baseline-workflows.json` — reusable test workflows
 - [`patch-review/static-analysis.md`](patch-review/static-analysis.md) — detailed patch findings
 - [`reports/evaluation-report.md`](reports/evaluation-report.md) — evaluation report
@@ -154,6 +172,34 @@ Run the automated checks:
 ```bash
 ./tests/health-check.sh
 ./tests/persistence-check.sh
+```
+
+Start and validate the separate latest-version baseline:
+
+```bash
+docker compose -f compose.latest.yaml config --quiet
+docker compose -f compose.latest.yaml up -d
+./tests/latest-check.sh
+```
+
+Open it at:
+
+```text
+http://localhost:5679
+```
+
+Run its persistence test:
+
+```bash
+COMPOSE_FILE=compose.latest.yaml \
+N8N_BASE_URL=http://localhost:5679 \
+./tests/persistence-check.sh
+```
+
+Stop only the latest-version stack without deleting its data:
+
+```bash
+docker compose -f compose.latest.yaml down
 ```
 
 Stop without deleting persistent data:

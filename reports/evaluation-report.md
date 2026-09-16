@@ -90,3 +90,9 @@ Detailed findings: [`../patch-review/static-analysis.md`](../patch-review/static
 The clean n8n `2.36.7` environment passed all completed baseline, regression and persistence tests.
 
 The supplied patch targets n8n `1.119.0` and presents material compatibility, security and maintenance risks. It was not applied to the validated environment; therefore, Enterprise-feature activation, patched stability and the final before-and-after comparison remain outstanding.
+
+## Latest-Version Follow-up — 15 September 2026
+
+A second Docker Compose definition was prepared for n8n `2.38.7`. It is isolated from the validated `2.36.7` baseline by separate container names, volumes, network and localhost port `5679`.
+
+Execution remains pending on the approved Docker/WSL host. This follow-up validates the clean latest-version baseline only. Enterprise validation still requires an authorised licence or an authorised company-provided test artifact.

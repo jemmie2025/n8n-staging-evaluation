@@ -5,8 +5,10 @@ set -Eeuo pipefail
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$PROJECT_ROOT"
 
+compose_file="${COMPOSE_FILE:-compose.yaml}"
+
 snapshot_counts() {
-  docker compose exec -T postgres sh -lc '
+  docker compose -f "$compose_file" exec -T postgres sh -lc '
     psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -tAc "
       SELECT COUNT(*) FROM workflow_entity;
       SELECT COUNT(*) FROM credentials_entity;
@@ -28,7 +30,7 @@ wait_for_health() {
 
 before="$(snapshot_counts)"
 
-docker compose restart >/dev/null
+docker compose -f "$compose_file" restart >/dev/null
 wait_for_health
 after_restart="$(snapshot_counts)"
 
@@ -39,8 +41,8 @@ fi
 
 echo "PASS: data persisted after service restart"
 
-docker compose down >/dev/null
-docker compose up -d >/dev/null
+docker compose -f "$compose_file" down >/dev/null
+docker compose -f "$compose_file" up -d >/dev/null
 wait_for_health
 after_recreation="$(snapshot_counts)"
 

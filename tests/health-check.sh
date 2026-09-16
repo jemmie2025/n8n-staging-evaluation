@@ -5,9 +5,12 @@ set -Eeuo pipefail
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$PROJECT_ROOT"
 
-docker compose config --quiet
+compose_file="${COMPOSE_FILE:-compose.yaml}"
+base_url="${N8N_BASE_URL:-http://localhost:5678}"
 
-postgres_id="$(docker compose ps -q postgres)"
+docker compose -f "$compose_file" config --quiet
+
+postgres_id="$(docker compose -f "$compose_file" ps -q postgres)"
 
 if [[ -z "$postgres_id" ]]; then
   echo "FAIL: PostgreSQL container is not running"
@@ -33,7 +36,7 @@ health_response="$(
     --retry 10 \
     --retry-delay 2 \
     --retry-connrefused \
-    http://localhost:5678/healthz
+    "$base_url/healthz"
 )"
 
 if ! jq -e '.status == "ok"' >/dev/null <<<"$health_response"; then
