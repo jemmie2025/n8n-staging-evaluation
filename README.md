@@ -6,6 +6,8 @@ Isolated evaluation framework for Task #5290, covering clean n8n baseline valida
 
 The clean n8n `2.36.7` environment passed all completed functional, credential-storage and persistence tests.
 
+The separate clean n8n `2.38.7` follow-up environment also passed health, exact-version, service-restart and container-recreation persistence checks. Its Usage and plan page confirmed that it remains on the Community Edition.
+
 Static analysis confirmed that the supplied patch targets n8n `1.119.0`. Compatibility with n8n `2.36.7` is not established, so the patch was not applied to the validated baseline.
 
 ## Patch Assessment
@@ -77,7 +79,10 @@ The patch was fingerprinted using SHA-256. `git status --short` returned no outp
 | Patch execution | Not performed |
 | Enterprise-feature validation | Not verified |
 | Before-and-after comparison | Outstanding |
-| Separate n8n 2.38.7 validation stack | Prepared; execution pending |
+| Separate n8n 2.38.7 validation stack | Passed |
+| n8n 2.38.7 service restart persistence | Passed |
+| n8n 2.38.7 container recreation persistence | Passed |
+| n8n 2.38.7 edition status | Community Edition confirmed |
 
 ## Environment
 
@@ -109,6 +114,8 @@ The follow-up stack uses:
 
 No licence-bypass settings or patch files are included. Enterprise testing still requires an authorised licence or an authorised test artifact supplied by the company.
 
+The follow-up stack was executed successfully. PostgreSQL reported healthy, the n8n health endpoint returned successfully, the running version was confirmed as `2.38.7`, and data persisted after both service restart and container recreation.
+
 ## Baseline Validation
 
 ### Isolated Deployment
@@ -136,6 +143,16 @@ The webhook received and processed the test payload successfully.
 The environment was upgraded to n8n `2.36.7`. Health, service-restart and container-recreation persistence checks passed.
 
 ![n8n 2.36.7 upgrade and persistence validation](evidence/persistence/08-v2.36.7-upgrade-and-persistence-passed.png)
+
+### Latest-Version Validation
+
+The isolated n8n `2.38.7` follow-up passed health, version and persistence checks.
+
+![n8n 2.38.7 persistence validation](evidence/persistence/09-v2.38.7-persistence-passed.png)
+
+The Usage and plan page confirmed that the clean follow-up remains on the Community Edition; Enterprise features were not activated.
+
+![n8n 2.38.7 Community Edition](evidence/latest/01-v2.38.7-community-edition.png)
 
 ## Deliverables
 
@@ -212,6 +229,6 @@ docker compose down
 
 ## Conclusion
 
-The isolated n8n `2.36.7` baseline passed all completed health, workflow, credential-storage, regression and persistence tests.
+The isolated n8n `2.36.7` baseline passed all completed health, workflow, credential-storage, regression and persistence tests. The separate clean n8n `2.38.7` follow-up also passed health, version, restart and container-recreation persistence checks and was confirmed as Community Edition.
 
 The supplied patch targets n8n `1.119.0` and introduces material compatibility, security and maintenance risks. Patch execution, Enterprise-feature validation and the final before-and-after comparison remain outstanding.

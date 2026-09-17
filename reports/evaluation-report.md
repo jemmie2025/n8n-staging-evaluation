@@ -2,12 +2,14 @@
 
 **Task:** #5290
 **Evaluator:** Jemimah Godswill
-**Date:** 27 August 2026
-**Baseline:** n8n `2.36.7`
+**Date:** 17 September 2026
+**Baseline:** n8n `2.36.7` with isolated n8n `2.38.7` follow-up
 
 ## Executive Summary
 
 A clean n8n `2.36.7` instance was deployed in an isolated Docker Compose environment and tested successfully. Core workflows, webhooks, credential storage, service health and persistence passed without affecting production.
+
+A separate clean n8n `2.38.7` follow-up stack also passed health, exact-version, service-restart and container-recreation persistence checks. Its Usage and plan page confirmed Community Edition status.
 
 A read-only assessment of the MatrixForgeLabs development licence-bypass patch confirmed that it targets n8n `1.119.0`, not `2.36.7`. The patch was therefore not applied to the validated baseline, and Enterprise-feature activation remains unverified.
 
@@ -41,6 +43,10 @@ A read-only assessment of the MatrixForgeLabs development licence-bypass patch c
 | Patch execution | Not performed |
 | Enterprise-feature validation | Not verified |
 | Clean-versus-patched comparison | Not completed |
+| n8n 2.38.7 health and exact-version validation | Passed |
+| n8n 2.38.7 service restart persistence | Passed |
+| n8n 2.38.7 container recreation persistence | Passed |
+| n8n 2.38.7 edition status | Community Edition confirmed |
 
 ## Baseline Findings
 
@@ -84,15 +90,19 @@ Detailed findings: [`../patch-review/static-analysis.md`](../patch-review/static
 - [Modified source files](../evidence/patch-review/10-patch-modified-files.png)
 - [Security-risk flags](../evidence/patch-review/11-patch-security-risk-flags.png)
 - [Patch integrity and clean review](../evidence/patch-review/12-patch-integrity-and-clean-review.png)
+- [n8n 2.38.7 persistence validation](../evidence/persistence/09-v2.38.7-persistence-passed.png)
+- [n8n 2.38.7 Community Edition](../evidence/latest/01-v2.38.7-community-edition.png)
 
 ## Conclusion
 
-The clean n8n `2.36.7` environment passed all completed baseline, regression and persistence tests.
+The clean n8n `2.36.7` environment passed all completed baseline, regression and persistence tests. The separate clean n8n `2.38.7` follow-up also passed health, version and persistence tests and was confirmed as Community Edition.
 
 The supplied patch targets n8n `1.119.0` and presents material compatibility, security and maintenance risks. It was not applied to the validated environment; therefore, Enterprise-feature activation, patched stability and the final before-and-after comparison remain outstanding.
 
-## Latest-Version Follow-up — 15 September 2026
+## Latest-Version Follow-up — 17 September 2026
 
 A second Docker Compose definition was prepared for n8n `2.38.7`. It is isolated from the validated `2.36.7` baseline by separate container names, volumes, network and localhost port `5679`.
 
-Execution remains pending on the approved Docker/WSL host. This follow-up validates the clean latest-version baseline only. Enterprise validation still requires an authorised licence or an authorised company-provided test artifact.
+The follow-up stack was executed successfully on the approved Docker/WSL host. PostgreSQL was healthy, the n8n health endpoint responded successfully, the running version was confirmed as `2.38.7`, and data persisted after service restart and container recreation.
+
+The Usage and plan page identified the instance as Community Edition. This follow-up validates the clean latest-version baseline only. Enterprise activation remains unverified and still requires an authorised licence or an authorised company-provided test artifact.
